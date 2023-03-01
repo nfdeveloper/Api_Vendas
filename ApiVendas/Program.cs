@@ -1,7 +1,10 @@
 using ApiVendas.Context;
 using ApiVendas.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,14 +23,29 @@ builder.Services.AddIdentity<ObrasUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddAuthentication(
+                JwtBearerDefaults.AuthenticationScheme).
+                AddJwtBearer(options =>
+                 options.TokenValidationParameters = new TokenValidationParameters
+                 {
+                     ValidateIssuer = true,
+                     ValidateAudience = true,
+                     ValidateLifetime = true,
+                     ValidAudience = builder.Configuration["TokenConfiguration:Audience"],
+                     ValidIssuer = builder.Configuration["TokenConfiguration:Issuer"],
+                     ValidateIssuerSigningKey = true,
+                     IssuerSigningKey = new SymmetricSecurityKey(
+                         Encoding.UTF8.GetBytes(builder.Configuration["Jwt:key"]))
+                 });
+
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Default Password settings.
-    options.Password.RequireDigit = false; // Número
+    options.Password.RequireDigit = false; // Nï¿½mero
     options.Password.RequireLowercase = false; //letra em Caixa Baixa
     options.Password.RequireNonAlphanumeric = false; // letra
     options.Password.RequireUppercase = false; // letra em Caixa Alta
-    options.Password.RequiredLength = 5; // Tamanho mínimo
+    options.Password.RequiredLength = 5; // Tamanho mï¿½nimo
     options.Password.RequiredUniqueChars = 0; // Caracteres especiais
 });
 

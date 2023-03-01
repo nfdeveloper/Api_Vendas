@@ -9,7 +9,7 @@ namespace ApiVendas.DAO
     {
         OracleCommand? cmd;
 
-        public async Task<List<Venda>> vendas()
+        public async Task<List<Venda>> vendas(int cod_fornecedor)
         {
             if (con.State == ConnectionState.Closed)
             {
@@ -71,7 +71,7 @@ namespace ApiVendas.DAO
                                   "FROM CONSINCO.MAP_PRODUTO P\r\n  )\r\n    " +
                                   "and exists (select 1\r\n           " +
                                   "from CONSINCO.MAP_FAMFORNEC\r\n          " +
-                                  "where SEQFORNECEDOR IN ( 453\r\n  " +
+                                  "where SEQFORNECEDOR IN ( "+cod_fornecedor+"\r\n  " +
                                   ")\r\n            " +
                                   "and PRINCIPAL = 'S'\r\n            " +
                                   "and MAP_FAMFORNEC.SEQFAMILIA = A.SEQFAMILIA)\r\n  " +
