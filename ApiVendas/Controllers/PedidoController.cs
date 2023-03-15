@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiVendas.DAO;
-using ApiVendas.Db;
 using ApiVendas.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,31 +12,29 @@ namespace ApiVendas.Controllers
 	[Authorize(AuthenticationSchemes = "Bearer")]
 	[ApiController]
 	[Route("api/v1/[controller]")]
-	public class VendaController : ControllerBase
+	public class PedidoController : ControllerBase
 	{
+		
 		[HttpGet]
-		public async Task<ActionResult<List<Venda>>> Venda()
+		public async Task<List<Pedido>> Pedidos()
 		{
+			PedidoDAO pedido = new DAO.PedidoDAO();			
 			VendaDAO oracle = new VendaDAO();
 			var cod_fornecedor = User.Claims.First(c => c.Type == "Fornecedor");
-			List<Venda> vendas = await oracle.vendas(int.Parse(cod_fornecedor.Value));
+			List<Pedido> pedidos = await pedido.PedidosPorFornecedor(int.Parse(cod_fornecedor.Value));
 			
-			if(vendas is null)
-			{
-				return NotFound("Nenhuma venda Encontrada!");
-			}
-
-			return vendas;
+			return pedidos;
 		}
 		
-		[HttpGet("Loja/{num_loja}")]
-		public async Task<ActionResult<List<Venda>>> VendaPorLoja(int num_loja)
+		[HttpGet("{num_loja}")]
+		public async Task<List<Pedido>> PedidosPorLoja(int num_loja)
 		{
+			PedidoDAO pedido = new DAO.PedidoDAO();			
 			VendaDAO oracle = new VendaDAO();
 			var cod_fornecedor = User.Claims.First(c => c.Type == "Fornecedor");
-			List<Venda> vendas = await oracle.vendasPorLoja(int.Parse(cod_fornecedor.Value), num_loja);
-
-			return vendas;
+			List<Pedido> pedidos = await pedido.PedidosPorFornecedorPorLoja(int.Parse(cod_fornecedor.Value), num_loja);
+			
+			return pedidos;
 		}
 		
 	}
