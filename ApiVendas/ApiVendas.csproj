@@ -18,6 +18,10 @@
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.90" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" />
+    <PackageReference Include="FastReport.OpenSource" Version="2021.3.15" />
+    <PackageReference Include="FastReport.OpenSource.Data.Postgres" Version="2021.3.0" />
+    <PackageReference Include="FastReport.OpenSource.Web" Version="2021.3.15" />
+    <PackageReference Include="FastReport.OpenSource.Export.PdfSimple" Version="2021.3.15" />
   </ItemGroup>
 
 </Project>

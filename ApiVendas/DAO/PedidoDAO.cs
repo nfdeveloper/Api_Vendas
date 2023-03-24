@@ -23,7 +23,7 @@ namespace ApiVendas.DAO
 			
 			try
 			{
-				cmd = new OracleCommand();
+				cmd = new OracleCommand(); 
 				cmd.Connection = con;
 				cmd.Transaction = tran;
 				

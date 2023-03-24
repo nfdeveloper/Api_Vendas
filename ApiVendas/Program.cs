@@ -1,5 +1,6 @@
 using ApiVendas.Context;
 using ApiVendas.Models;
+using FastReport.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
