@@ -24,7 +24,10 @@ namespace ApiVendas.Controllers
 			_webHostEnv = webHostEnv;
 		}
 
-		[HttpGet]
+        /// <summary>
+        /// Lista as Vendas do dia anterior.
+        /// </summary>
+        [HttpGet]
 		public async Task<ActionResult<List<Venda>>> Venda()
 		{
 			VendaDAO oracle = new VendaDAO();
@@ -38,8 +41,11 @@ namespace ApiVendas.Controllers
 
 			return vendas; 
 		}
-		
-		[HttpGet("Loja/{num_loja}")]
+
+        /// <summary>
+        /// Lista as Vendas do dia anterior por loja.
+        /// </summary>
+        [HttpGet("Loja/{num_loja}")]
 		public async Task<ActionResult<List<Venda>>> VendaPorLoja(int num_loja)
 		{
 			VendaDAO oracle = new VendaDAO();
@@ -47,9 +53,12 @@ namespace ApiVendas.Controllers
 			List<Venda> vendas = await oracle.vendasPorLoja(int.Parse(cod_fornecedor.Value), num_loja);
 
 			return vendas;
-		}	
-		
-		[HttpGet("{data_inicial}/{data_final}")]	
+		}
+
+        /// <summary>
+        /// Lista as Vendas de todas as Lojas em um período. Obs: Data Inicial > 01-01-2022
+        /// </summary>
+        [HttpGet("{data_inicial}/{data_final}")]	
 		public async Task<ActionResult<List<Venda>>> VendaPorData(string data_inicial,string data_final)
 		{
 			DateTime data_inicial_check = DateTime.Parse(data_inicial);
@@ -62,7 +71,7 @@ namespace ApiVendas.Controllers
 			
 			if(data_inicial_check.Year < 2022)
 			{
-				return BadRequest("Data inicial não pode ser menor que 01/01/2021");
+				return BadRequest("Data inicial não pode ser menor que 01/01/2022");
 			}
 			
 			VendaDAO oracle = new VendaDAO();
@@ -118,8 +127,9 @@ namespace ApiVendas.Controllers
 			
 			
 		}
-		
-		[HttpGet("GerarTemplatePdf")]
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpGet("GerarTemplatePdf")]
 		public async Task<ActionResult> GerarTemplatePdf()
 		{
 			VendaDAO oracle = new VendaDAO();
@@ -132,8 +142,12 @@ namespace ApiVendas.Controllers
 			freport.Report.Save(reportFile);
 			return Ok($" Relatório gerado : {caminhoReport}");
 		}
-		
-		[HttpGet("Gerar/Pdf")]
+
+        /// <summary>
+        /// Gera um pdf das Vendas do dia anterior de todas as lojas.
+        /// </summary>
+		[ApiExplorerSettings(IgnoreApi = true)]
+        [HttpGet("Gerar/Pdf")]
 		public async Task<ActionResult> GerarPdf()
 		{
 			VendaDAO oracle = new VendaDAO();
@@ -141,7 +155,10 @@ namespace ApiVendas.Controllers
 			var reportFile = caminhoReport;
 			
 			var freport = new FastReport.Report();
-			var vendas = await oracle.vendas(10);
+
+            var cod_fornecedor = User.Claims.First(c => c.Type == "Fornecedor");
+
+            var vendas = await oracle.vendas(int.Parse(cod_fornecedor.Value));
 			List<VendaLojaDTO> vendasPdf = await VendaParaPdf(vendas);
 			freport.Report.Load(reportFile);
 			freport.Dictionary.RegisterBusinessObject(vendasPdf, "vendasPdf", 10,true);
@@ -164,5 +181,56 @@ namespace ApiVendas.Controllers
 			
 			return File(reportArray, "application/pdf","Venda.pdf");
 		}
-	}
+
+        /// <summary>
+        /// Pdf de Vendas de todas as Lojas em um período. Obs: Data Inicial > 01-01-2022
+        /// </summary>
+		[ApiExplorerSettings(IgnoreApi = true)]
+        [HttpGet("{data_inicial}/{data_final}/Pdf")]
+        public async Task<ActionResult> VendaPorDataPdf(string data_inicial, string data_final)
+        {
+            DateTime data_inicial_check = DateTime.Parse(data_inicial);
+            DateTime data_final_check = DateTime.Parse(data_final);
+
+            if (data_final_check < data_inicial_check)
+            {
+                return BadRequest("A data final não pode ser menor que a data inicial");
+            }
+
+            if (data_inicial_check.Year < 2022)
+            {
+                return BadRequest("Data inicial não pode ser menor que 01/01/2022");
+            }
+
+            VendaDAO oracle = new VendaDAO();
+            var cod_fornecedor = User.Claims.First(c => c.Type == "Fornecedor");
+            List<Venda> vendas = await oracle.vendasPorData(int.Parse(cod_fornecedor.Value), data_inicial, data_final);
+
+            var caminhoReport = Path.Combine("Reports\\VendaFornecedorPdf.frx");
+            var reportFile = caminhoReport;
+
+            var freport = new FastReport.Report();
+            List<VendaLojaDTO> vendasPdf = await VendaParaPdf(vendas);
+            freport.Report.Load(reportFile);
+            freport.Dictionary.RegisterBusinessObject(vendasPdf, "vendasPdf", 10, true);
+            freport.Prepare();
+
+            //var pdfExport = new PDFSimpleExport();
+            // using MemoryStream ms = new MemoryStream();
+            // pdfExport.Export(freport, ms);
+            // ms.Flush();
+            // return File(ms.ToArray(), "application/pdf");
+            byte[] reportArray = null;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                var pdfExport = new PDFSimpleExport();
+                pdfExport.Export(freport.Report, ms);
+                ms.Flush();
+                reportArray = ms.ToArray();
+            }
+
+            return File(reportArray, "application/pdf", "Venda.pdf");
+        }
+    }
 }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="03/16/2023 13:45:14" ReportInfo.Modified="03/17/2023 18:03:19" ReportInfo.CreatorVersion="2021.3.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="03/16/2023 13:45:14" ReportInfo.Modified="04/05/2023 11:59:56" ReportInfo.CreatorVersion="2021.3.0.0">
   <Dictionary>
     <BusinessObjectDataSource Name="vendasPdf" ReferenceName="vendasPdf" DataType="null" Enabled="true">
       <Column Name="Loja" DataType="System.String"/>
@@ -14,7 +14,7 @@
       </BusinessObjectDataSource>
     </BusinessObjectDataSource>
     <Total Name="Total" Expression="[vendasPdf.Vendas.Quantidade_Vendida]" Evaluator="Data2"/>
-    <Total Name="TotalVlrVenda" Expression="[vendasPdf.Vendas.Valor_Vendido]" Evaluator="Data2"/>
+    <Total Name="TotalVlrVenda" Expression="[vendasPdf.Vendas.Valor_Vendido]" Evaluator="Data2" ResetAfterPrint="false"/>
   </Dictionary>
   <ReportPage Name="Page1" Watermark.Font="Arial, 60pt">
     <PageHeaderBand Name="PageHeader1" Width="718.2" Height="122.85">
@@ -27,7 +27,7 @@
       <DataBand Name="Data2" Top="182.1" Width="718.2" Height="28.35" Border.Lines="Bottom" DataSource="Vendas">
         <TextObject Name="Text5" Left="113.4" Width="132.3" Height="28.35" Border.Lines="Right" Text="[vendasPdf.Vendas.Cod_Produto]" VertAlign="Center" Font="Arial, 9pt"/>
         <TextObject Name="Text6" Left="245.7" Width="245.7" Height="28.35" Text="[vendasPdf.Vendas.Descricao_Produto]" VertAlign="Center" Font="Arial, 9pt"/>
-        <TextObject Name="Text7" Left="491.4" Width="122.85" Height="28.35" Border.Lines="Right" Text="[vendasPdf.Vendas.Quantidade_Vendida]" Format="Number" Format.UseLocale="true" Format.DecimalDigits="2" VertAlign="Center" WordWrap="false" Font="Arial, 9pt" Trimming="EllipsisCharacter"/>
+        <TextObject Name="Text7" Left="491.4" Width="122.85" Height="28.35" Border.Lines="Left, Right" Text="[vendasPdf.Vendas.Quantidade_Vendida]" Format="Number" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Center" VertAlign="Center" WordWrap="false" Font="Arial, 9pt" Trimming="EllipsisCharacter"/>
         <TextObject Name="Text8" Left="614.25" Width="103.95" Height="28.35" Text="[vendasPdf.Vendas.Valor_Vendido]" Format="Number" Format.UseLocale="true" Format.DecimalDigits="2" VertAlign="Center" WordWrap="false" Font="Arial, 9pt" Trimming="EllipsisCharacter"/>
         <TextObject Name="Text15" Left="9.45" Width="103.95" Height="28.35" Border.Lines="Right" Text="[vendasPdf.Vendas.Data_Venda]" VertAlign="Center" Font="Arial, 9pt"/>
         <DataHeaderBand Name="DataHeader1" Top="159.2" Width="718.2" Height="18.9" Fill.Color="Gray">
@@ -38,8 +38,8 @@
           <TextObject Name="Text13" Left="614.25" Width="94.5" Height="18.9" Text="VLR_VENDA&#13;&#10;" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="White"/>
         </DataHeaderBand>
         <DataFooterBand Name="DataFooter1" Top="214.45" Width="718.2" Height="28.35" Border.Color="DimGray" Fill.Color="Gray">
-          <TextObject Name="Text20" Left="491.4" Width="122.85" Height="28.35" Text="[Total]" Format="Number" Format.UseLocale="true" Format.DecimalDigits="2" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="White"/>
-          <TextObject Name="Text21" Left="614.25" Width="94.5" Height="28.35" Text="[TotalVlrVenda]" Format="Currency" Format.UseLocale="false" Format.DecimalDigits="2" Format.DecimalSeparator="," Format.GroupSeparator="." Format.CurrencySymbol="R$" Format.PositivePattern="2" Format.NegativePattern="9" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="White"/>
+          <TextObject Name="Text20" Left="491.4" Width="122.85" Height="28.35" Text="[Total]" Format="Number" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="White"/>
+          <TextObject Name="Text21" Left="614.25" Width="94.5" Height="28.35" Text="[TotalVlrVenda]" Duplicates="Clear" Format="Currency" Format.UseLocale="false" Format.DecimalDigits="2" Format.DecimalSeparator="," Format.GroupSeparator="." Format.CurrencySymbol="R$" Format.PositivePattern="2" Format.NegativePattern="9" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="White"/>
           <TextObject Name="Text22" Width="245.7" Height="28.35" Text="TOTAL" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="White"/>
         </DataFooterBand>
       </DataBand>

@@ -33,7 +33,7 @@ namespace ApiVendas.DAO
 					" 	WHEN I.QTDTOTRECEBIDA IS NULL THEN 'ABERTO' \n"+
 					" 	ELSE 'RECEBIDO' \n"+
 					" 	END AS SITUAÇÃO, \n"+
-					" E.NOMEREDUZIDO AS LOJA, \n"+
+					" E.NROEMPRESA AS LOJA, \n"+
 					" TO_CHAR(PR.SEQPRODUTO) AS COD_PRODUTO, \n"+
 					" TO_CHAR(CASE \n"+ 
 					" WHEN (SELECT H.CODACESSO \n"+ 
@@ -84,7 +84,7 @@ namespace ApiVendas.DAO
 					" 		AND P.DTAEMISSAO BETWEEN TRUNC(SYSDATE)-15 AND TRUNC(SYSDATE)  \n"+
 					" 		AND I.STATUSITEM = 'A' \n"+
 					" 		AND P.SEQFORNECEDOR = "+cod_fornecedor+" \n"+
-					" ORDER BY P.NROPEDIDOSUPRIM, E.NOMEREDUZIDO";
+					" ORDER BY P.NROPEDIDOSUPRIM, E.NROEMPRESA";
 				
 				List<Pedido> pedidos = new List<Pedido>();
 				OracleDataReader od = (OracleDataReader)await cmd.ExecuteReaderAsync();
